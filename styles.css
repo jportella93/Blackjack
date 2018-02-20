@@ -1,0 +1,197 @@
+* {
+    box-sizing: border-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+body {
+    background: linear-gradient(to bottom right, #198B43, #052413);
+    background-repeat: no-repeat;
+    height: 100%;
+    margin: 0;
+    background-attachment: fixed;
+    /font-family: "garamond", Times, serif;
+}
+
+
+h1 {
+    font-size: 4em;
+}
+
+h2 {
+    font-size: 3em;
+
+}
+
+h3 {
+    font-size: 2em;
+
+}
+
+p {
+    font-size: 1em;
+}
+
+ul {
+    list-style: none;
+}
+
+.card {
+    background: linear-gradient(to bottom right, #F4F4F4, #efefef);
+    width: 14em;
+    height: 20.40em;
+    padding-left: 1em;
+    padding-top: 01em;
+    margin: 0.5em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 0.4em;
+    display: inline-block;
+    position: relative;
+    font-weight: bold;
+}
+
+.card img {
+    width: 2em;
+}
+
+.card h3 {
+    display: inline-block;
+    font-size: 2.75em;
+    padding: 0em;
+    margin: 0em;
+}
+
+.undealed_player {
+    opacity: 0;
+    bottom: 40em;
+}
+
+.undealed_dealer {
+    opacity: 0;
+    bottom: 10em;
+}
+
+.hidden {
+    display: none;
+}
+
+.flipped {
+    opacity: 0.5;
+    background-image: url(images/card_back.svg);
+    background-size:cover;
+}
+
+.button_list button {
+    background: linear-gradient(to bottom right, #d84242, #A71F1E);
+    border-radius: 50em;
+    width: 20em;
+    height: 20em;
+    border-width: 0.5em;
+    border-color: #F4F4F4;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.button_list button:disabled {
+    color: black;
+}
+
+.button_list button h3 {
+    color: #F4F4F4;
+    font-size: 4em;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+#player_hand {
+    position: fixed;
+    bottom: 3%;
+    left: 25%;
+}
+
+#player_hand li,
+#dealer_hand li {
+    margin: 0 -4em;
+}
+
+#dealer_hand {
+    position: fixed;
+    left: 40%;
+    top: 3%;
+}
+
+#big_event_message_holder {
+    background-color: rgba(5, 36, 19, 0.5);
+    color: #F4F4F4;
+    text-align: center;
+    font-size: 130%;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 999;
+    font-family: Garamond, Times, "Times New Roman", serif;
+}
+
+#big_event_message_holder h3 {
+    font-weight: 100;
+}
+
+#hit {
+    position: fixed;
+    right: 3em;
+    bottom: 3em;
+}
+
+#stand {
+    position: fixed;
+    left: 3em;
+    bottom: 3em;
+}
+
+.score,
+#ace_becomes_one_player {
+    background-color: rgba(5, 36, 19, 0.7);
+    border-radius: 1em;
+    width: 12em;
+    border-style: solid;
+    border-color: #F4F4F4;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.score p, #ace_becomes_one_player {
+    color: #F4F4F4;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    text-align: center;
+    font-size: 1.3em;
+    margin: 0.3em 0;
+}
+
+#dealer_score {
+    position: fixed;
+    top: 1%;
+    left: 23%;
+    z-index: 999;
+
+}
+
+#player_score {
+    position: fixed;
+    bottom: 1%;
+    left: 50%;
+    z-index: 999;
+
+}
+
+#ace_becomes_one_player {
+    position: fixed;
+    bottom: 0.3%;
+    right: 51%;
+    z-index: 999;
+    width: 21em;
+    padding: 0.35em
+}
