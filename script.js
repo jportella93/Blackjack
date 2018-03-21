@@ -1,6 +1,10 @@
 //TODO: Make responsive for tablet
 //TODO: go landscape mode in tablet and portrait in phone.
-//TODO: Implement betting
+//TODO: Implement betting https://www.blackjackinfo.com/blackjack-rules/
+//TODO: Show tips when the game ends. E.G. Controls, strategies, dealer behaviour, time and games so far...
+//TODO: Music and sound
+
+$(document).ready(function () {
 
 //GLOBAL VARIABLES
 let playerCards = [];
@@ -10,13 +14,15 @@ let deck = [];
 let currentCardsPlayer = 0;
 let currentCardsDealer = 0;
 
+let playerMoney = 100;
+let bet = 0;
 
 let gameStarted = false;
 let playerTurn = false;
 let dealerTurn = false;
 
-let cardTimeout = 1000;
-let bigSignTimeout = 1000;
+let cardTimeout = 800;
+let bigSignTimeout = 900;
 
 //FUNCTIONS
 
@@ -215,8 +221,6 @@ function currentHand(player) {
     return "current hand is: " + currentHand;
 }
 
-
-
 //FUNCTIONS FOR JQUERY
 
 //Returns a string with the players card number and suit.
@@ -279,11 +283,21 @@ function appendCardDealerAnimation() {
 
 //// ACTUAL GAME
 
+//The big sign appears when the DOM is ready.
+$('#big_event_message_holder').toggleClass('hidden');
+
 function gameStart() {
+  gameStarted = true;
+
+  $('.card').remove();
+  $('#big_event_message_holder').toggleClass('hidden');
 
     playerCards = [];
     dealerCards = [];
     createDeck();
+
+
+
 
     //player is dealt two cards
     playerCards.push(randomCard(), randomCard());
@@ -294,9 +308,27 @@ function gameStart() {
     dealerCards.push(randomCard(), randomCard());
     currentCardsDealer = 2;
 
+    appendNewCardToPlayerHand(1);
+    appendNewCardToPlayerHand(2);
+    appendNewCardToDealerHand(1);
+
+    //HUD appears
+    $('#stand').removeClass('hidden');
+    $('#hit').removeClass('hidden');
+    $('#player_score span').text("" + totalValue(playerCards) + "");
+    $('#dealer_score span').text("" + dealerCards[0].value + "");
+    $('#player_score').removeClass('hidden');
+    $('#dealer_score').removeClass('hidden');
+
+    //For the flipped card
+    var secondCardDealerFlipped = $('<li class="card flipped undealed_dealer" id="dealer_card"><h3></h3></li>');
+    $('#dealer_hand').append(secondCardDealerFlipped);
+    appendCardDealerAnimation();
+
     console.log("The player is dealt a " + describeDealtCard(playerCards[0]) + " and a " + describeDealtCard(playerCards[1]) + ". " + tellCurrentValue(playerCards));
 
     console.log("The dealer is dealt a " + describeDealtCard(dealerCards[0]) + " and a hidden card.")
+
 
     if (totalValue(playerCards) > 21 && hasAnAce(playerCards)) {
         turnAceToOne(playerCards);
@@ -524,57 +556,48 @@ function youLose() {
 
 
 
-//JQUERY
-
-$(document).ready(function () {
-
-
-    //The big sign appears when the DOM is ready.
-    $('#big_event_message_holder').toggleClass('hidden');
-
-    //First click makes the opening div disappear and starts the game.
-    $('#big_event_message_holder').on('click', function () {
-
-
-        $('.card').remove();
-        $('#big_event_message_holder').toggleClass('hidden');
-        gameStarted = true;
-        gameStart();
-
-        appendNewCardToPlayerHand(1);
-        appendNewCardToPlayerHand(2);
-        appendNewCardToDealerHand(1);
-
-        //For the flipped card
-        var secondCardDealerFlipped = $('<li class="card flipped undealed_dealer" id="dealer_card"><h3></h3></li>');
-        $('#dealer_hand').append(secondCardDealerFlipped);
-        appendCardDealerAnimation();
-
-        //HUD appears
-        $('#stand').removeClass('hidden');
-        $('#hit').removeClass('hidden');
-        $('#player_score span').text("" + totalValue(playerCards) + "");
-        $('#dealer_score span').text("" + dealerCards[0].value + "");
-        $('#player_score').removeClass('hidden');
-        $('#dealer_score').removeClass('hidden');
+//Interaction
+//TODO: keydown arrows not working.
+    //Click or anykey starts game gameStart().
+    $(document).on('click', function(e) {
+      if (!gameStarted) {
+          gameStart();
+      };
     });
 
-    //Click on hit button
+    $(document).keypress(function(e) {
+      if (!gameStarted) {
+          gameStart();
+      };
+    });
+
+    //Click on hit button, right arrow or spacebar to hit()
     $('#hit').on('click', function () {
         if (playerTurn) {
             playerTurn = false;
             hit()
         };
-
-
     });
 
-    //click on stand button
+    $(document).keypress(function (e) {
+        if (playerTurn && e.which == 39 || e.which == 32) {
+            playerTurn = false;
+            hit()
+        };
+    });
+
+    //click on stand button, left arrow or enter to stand()
     $('#stand').on('click', function () {
         if (playerTurn) {
             playerTurn = false;
             stand();}
+    });
 
+    $(document).keypress(function (e) {
+        if (playerTurn && e.which == 37 || e.which == 13) {
+            playerTurn = false;
+            stand()
+        };
     });
 
 });
