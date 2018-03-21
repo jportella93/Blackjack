@@ -353,8 +353,8 @@ function hit() {
 //If the player chooses to stand, the dealer reveals the hidden card.
 function stand() {
     $('#ace_becomes_one_player').addClass('hidden');
-            $('#stand').addClass('hidden');
-        $('#hit').addClass('hidden');
+        // $('#stand').addClass('hidden');
+        // $('#hit').addClass('hidden');
     console.log('Dealer flips his hidden card. It is a ' + describeDealtCard(dealerCards[1]) + ".");
 $('.flipped').remove();
      appendNewCardToDealerHand(currentCardsDealer);
