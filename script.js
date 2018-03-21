@@ -1,3 +1,7 @@
+//TODO: Make responsive for tablet
+//TODO: go landscape mode in tablet and portrait in phone.
+//TODO: Implement betting
+
 //GLOBAL VARIABLES
 let playerCards = [];
 let dealerCards = [];
@@ -14,7 +18,7 @@ let dealerTurn = false;
 let cardTimeout = 1000;
 let bigSignTimeout = 1000;
 
-//FUNCTIONS 
+//FUNCTIONS
 
 // Creating the deck
 // Create the class Card with the card's rank and suit.
@@ -310,7 +314,7 @@ function gameStart() {
 
 //Player can choose to click HIT or click STAND
 
-//If clicks Hit receives another card. 
+//If clicks Hit receives another card.
 function hit() {
     $('#ace_becomes_one_player').addClass('hidden');
     playerCards.push(randomCard());
@@ -355,11 +359,11 @@ function stand() {
 $('.flipped').remove();
      appendNewCardToDealerHand(currentCardsDealer);
         $('#dealer_score span').text("" + totalValue(dealerCards) + "");
-           
+
     dealersDecision()
 }
 
-/*Following the same logic as in the player turn, the dealer's hand and it's 
+/*Following the same logic as in the player turn, the dealer's hand and it's
 total value is described. If it goes over 21 and has an Ace, the Ace will become
 value 1 instead of 11.
 */
@@ -368,7 +372,7 @@ function dealersDecision() {
 
     if (totalValue(dealerCards) > 21 && hasAnAce(dealerCards))
         turnAceToOne(dealerCards);
- $('#dealer_score span').text("" + totalValue(dealerCards) + ""); 
+ $('#dealer_score span').text("" + totalValue(dealerCards) + "");
     console.log(tellCurrentValue(dealerCards));
 
     /*Now the dealers decision. Dealer will take more cards until total value is 17 or more.
@@ -387,9 +391,9 @@ function dealersDecision() {
 }
 
 function dealerTakeACard() {
-    
+
     $('#dealer_score span').text("" + totalValue(dealerCards) + "");
-    
+
     setTimeout(function () {
         dealerCards.push(randomCard());
         currentCardsDealer++;
@@ -421,7 +425,7 @@ function decideWinner() {
     }, bigSignTimeout)
 }
 
-/*When player has 21 points in the first two cards it's a blackjack. 
+/*When player has 21 points in the first two cards it's a blackjack.
  * So player wins as long as dealer doesn't have blackjack.
  * If both have blackjack it is a draw.
  */
@@ -528,7 +532,7 @@ $(document).ready(function () {
     //The big sign appears when the DOM is ready.
     $('#big_event_message_holder').toggleClass('hidden');
 
-    //First click makes the opening div disappear and starts the game. 
+    //First click makes the opening div disappear and starts the game.
     $('#big_event_message_holder').on('click', function () {
 
 
@@ -570,7 +574,7 @@ $(document).ready(function () {
         if (playerTurn) {
             playerTurn = false;
             stand();}
-            
+
     });
 
 });

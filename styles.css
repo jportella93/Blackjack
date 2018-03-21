@@ -94,7 +94,7 @@ ul {
     border-width: 0.5em;
     border-color: #F4F4F4;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
+    outline: none;
 }
 
 .button_list button:disabled {
@@ -125,7 +125,7 @@ ul {
 }
 
 #big_event_message_holder {
-    background-color: rgba(5, 36, 19, 0.5);
+    background-color: rgba(5, 36, 19, 0.9);
     color: #F4F4F4;
     text-align: center;
     font-size: 130%;
@@ -194,4 +194,144 @@ ul {
     z-index: 999;
     width: 21em;
     padding: 0.35em
+}
+
+@media (max-width: 600px) {
+
+:root {
+  --card-width: 7em;
+  --card-height: 10.20em;
+}
+
+  .card {
+      width: var(--card-width);
+      height: var(--card-height);
+      padding-left: 1em;
+      padding-top: 01em;
+      margin: 0.5em;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .flipped {
+      background-image: url(images/card_back.svg);
+      background-size:var(--card-width), var(--card-height);
+      font-size: 1.1em;
+  }
+
+
+  .card img {
+    width: 1.6em;
+    margin: -0.3em 0.1em 0em -0.6em;
+  }
+
+  .card h3 {
+      display: inline-block;
+      font-size: 2.3em;
+      padding: 0em;
+      margin: -1em 0em;
+  }
+
+
+  .button_list button {
+      width: 7em;
+      height: 7em;
+      border-width: 0.4em;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      outline: none;
+  }
+
+  .button_list button h3 {
+      font-size: 1.5em;
+  }
+
+  #hit {
+      position: fixed;
+      right: 3em;
+      bottom: 5em;
+  }
+
+  #stand {
+      position: fixed;
+      left: 3em;
+      bottom: 5em;
+  }
+
+  #player_hand {
+      position: fixed;
+      bottom: 36%;
+      left: 3%;
+  }
+
+  #player_hand li,
+  #dealer_hand li {
+      margin: -1em -1.2em -5.5em 0em;
+  }
+
+  #dealer_hand {
+      position: fixed;
+      left: 3%;
+      top: 9%;
+  }
+
+  #big_event_message_holder {
+      /* background-color: rgba(5, 36, 19, 0.9);
+      color: #F4F4F4;
+      text-align: center; */
+      font-size: 70%;
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      z-index: 999;
+      font-family: Garamond, Times, "Times New Roman", serif;
+  }
+
+  #big_event_message_holder h3 {
+      font-weight: 100;
+  }
+
+  .score,
+  #ace_becomes_one_player {
+    background-color: rgba(5, 36, 19, 0.7);
+  border-radius: 1em;
+  width: 10em;
+  border-style: solid;
+  border-color: #F4F4F4;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-width: 0.17em;
+  }
+
+  .score p, #ace_becomes_one_player {
+      color: #F4F4F4;
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+      text-align: center;
+      font-size: 1.3em;
+      margin: 0.3em 0;
+  }
+
+  #dealer_score {
+      position: fixed;
+      top: 1%;
+      left: 30%;
+      z-index: 999;
+
+  }
+
+  #player_score {
+    position: fixed;
+    bottom: 1%;
+    left: 30%;
+    z-index: 999;
+  }
+
+  #ace_becomes_one_player {
+    position: fixed;
+  bottom: 51.3%;
+  right: 7%;
+  z-index: 999;
+  width: 21em;
+  padding: 0.35em;
+  font-size: 1em;
+  }
+
 }
