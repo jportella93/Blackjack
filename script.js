@@ -22,9 +22,43 @@ let playerTurn = false;
 let dealerTurn = false;
 
 let cardTimeout = 800;
-let bigSignTimeout = 900;
+let bigSignTimeout = 800;
+let autofireTimeout = 500;
 
-//FUNCTIONS
+//UTILITIES
+//Debounce functions
+function debounce(fn, delay) {
+  var timer = null;
+  return function () {
+    var context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.apply(context, args);
+    }, delay);
+  };
+}
+
+//Avoid autorepeated key fire
+//TODO:THIS IS NOT WORKING, STILL AUTOFIRES
+var allowed = true;
+
+$(document).keydown(function(event) {
+  if (event.repeat != undefined) {
+    allowed = !event.repeat;
+  }
+  if (!allowed) return;
+  allowed = false;
+  //...
+});
+
+$(document).keyup(function(e) {
+  allowed = true;
+});
+$(document).focus(function(e) {
+  allowed = true;
+});
+
+//GAME FUNCTIONS
 
 // Creating the deck
 // Create the class Card with the card's rank and suit.
@@ -281,6 +315,8 @@ function appendCardDealerAnimation() {
         $('.undealed_dealer').removeClass('undealed_dealer');
 }
 
+//function appendBet
+
 //// ACTUAL GAME
 
 //The big sign appears when the DOM is ready.
@@ -370,9 +406,10 @@ function hit() {
     //If the total value is over 21, player bust.
 
     if (totalValue(playerCards) > 21)
+      {playerTurn = false;
         setTimeout(function () {
             playerBust();
-        }, bigSignTimeout)
+        }, bigSignTimeout)}
     else {
         console.log('Hit or stand?');
         playerTurn = true;
@@ -553,48 +590,47 @@ function youLose() {
 }
 
 
-
-
-
 //Interaction
-//TODO: keydown arrows not working.
-    //Click or anykey starts game gameStart().
+    //Click or anykey except arrows starts game gameStart().
     $(document).on('click', function(e) {
       if (!gameStarted) {
           gameStart();
       };
     });
 
-    $(document).keypress(function(e) {
-      if (!gameStarted) {
+    $(document).keyup(function(e) {
+      if (!gameStarted && e.which != 39 && e.which != 37 && e.which != 38 && e.which != 40) {
           gameStart();
       };
     });
 
-    //Click on hit button, right arrow or spacebar to hit()
+    //Click on hit button or right arrow to hit()
     $('#hit').on('click', function () {
-        if (playerTurn) {
+        if (playerTurn == true && gameStarted) {
             playerTurn = false;
             hit()
         };
     });
 
-    $(document).keypress(function (e) {
-        if (playerTurn && e.which == 39 || e.which == 32) {
+    $(document).keyup(function (e) {
+        if (playerTurn == true && gameStarted && e.which == 39) {
             playerTurn = false;
-            hit()
+            hit();
+            setTimeout(function () {
+              playerTurn = true;
+            }, autofireTimeout)
         };
     });
 
-    //click on stand button, left arrow or enter to stand()
+    //click on stand button or left arrow to stand()
     $('#stand').on('click', function () {
-        if (playerTurn) {
+        if (playerTurn == true && gameStarted) {
             playerTurn = false;
             stand();}
     });
 
-    $(document).keypress(function (e) {
-        if (playerTurn && e.which == 37 || e.which == 13) {
+    $(document).keyup(function (e) {
+        if (playerTurn == true && gameStarted == true && e.which == 37) {
             playerTurn = false;
             stand()
         };
