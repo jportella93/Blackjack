@@ -23,7 +23,7 @@ let dealerTurn = false;
 
 let cardTimeout = 800;
 let bigSignTimeout = 800;
-let autofireTimeout = 500;
+let cardDealingTimeout = 200;
 
 //UTILITIES
 //Debounce functions
@@ -37,26 +37,6 @@ function debounce(fn, delay) {
     }, delay);
   };
 }
-
-//Avoid autorepeated key fire
-//TODO:THIS IS NOT WORKING, STILL AUTOFIRES
-var allowed = true;
-
-$(document).keydown(function(event) {
-  if (event.repeat != undefined) {
-    allowed = !event.repeat;
-  }
-  if (!allowed) return;
-  allowed = false;
-  //...
-});
-
-$(document).keyup(function(e) {
-  allowed = true;
-});
-$(document).focus(function(e) {
-  allowed = true;
-});
 
 //GAME FUNCTIONS
 
@@ -320,13 +300,13 @@ function appendCardDealerAnimation() {
 //// ACTUAL GAME
 
 //The big sign appears when the DOM is ready.
-$('#big_event_message_holder').toggleClass('hidden');
+$('#big_event_message_holder').removeClass('hidden');
 
 function gameStart() {
   gameStarted = true;
 
   $('.card').remove();
-  $('#big_event_message_holder').toggleClass('hidden');
+  $('#big_event_message_holder').addClass('hidden');
 
     playerCards = [];
     dealerCards = [];
@@ -345,8 +325,8 @@ function gameStart() {
     currentCardsDealer = 2;
 
     appendNewCardToPlayerHand(1);
-    appendNewCardToPlayerHand(2);
-    appendNewCardToDealerHand(1);
+    setTimeout(function () {return appendNewCardToPlayerHand(2);}, cardDealingTimeout)
+    setTimeout(function () {return appendNewCardToDealerHand(1);}, cardDealingTimeout * 2)
 
     //HUD appears
     $('#stand').removeClass('hidden');
@@ -407,6 +387,7 @@ function hit() {
 
     if (totalValue(playerCards) > 21)
       {playerTurn = false;
+        gameStarted = false;
         setTimeout(function () {
             playerBust();
         }, bigSignTimeout)}
@@ -525,7 +506,7 @@ function blackjack() {
     $('#big_event_message_holder h1').text("Blackjack!");
     $('#big_event_message_holder h3').text('Awesome! Play again?');
     $('#big_event_message_holder h2').text('');
-    $('#big_event_message_holder').toggleClass('hidden');
+    $('#big_event_message_holder').removeClass('hidden');
 }
 
 function blackjackPush() {
@@ -535,7 +516,7 @@ function blackjackPush() {
     $('#big_event_message_holder h1').text("Blackjack!");
     $('#big_event_message_holder h3').text('Unfortunately, the dealer also has Blackjack');
     $('#big_event_message_holder h2').text("It's a draw");
-    $('#big_event_message_holder').toggleClass('hidden');
+    $('#big_event_message_holder').removeClass('hidden');
 }
 
 function playerBust() {
@@ -545,7 +526,7 @@ function playerBust() {
     $('#big_event_message_holder h1').text("Bust! You Lose!");
     $('#big_event_message_holder h3').text('Your cards are over 21');
     $('#big_event_message_holder h2').text('Play again?');
-    $('#big_event_message_holder').toggleClass('hidden');
+    $('#big_event_message_holder').removeClass('hidden');
 }
 
 function dealerBust() {
@@ -555,7 +536,7 @@ function dealerBust() {
     $('#big_event_message_holder h1').text("You win!");
     $('#big_event_message_holder h3').text('Dealer cards are over 21');
     $('#big_event_message_holder h2').text("Play again?");
-    $('#big_event_message_holder').toggleClass('hidden');
+    $('#big_event_message_holder').removeClass('hidden');
 }
 
 function push() {
@@ -565,7 +546,7 @@ function push() {
     $('#big_event_message_holder h1').text("Push!");
     $('#big_event_message_holder h3').text('Player and dealer have the same score');
     $('#big_event_message_holder h2').text("It's a draw");
-    $('#big_event_message_holder').toggleClass('hidden');
+    $('#big_event_message_holder').removeClass('hidden');
 }
 
 function youWin() {
@@ -575,7 +556,7 @@ function youWin() {
     $('#big_event_message_holder h1').text("You win!");
     $('#big_event_message_holder h3').text("Your cards value is higher than dealers'");
     $('#big_event_message_holder h2').text("Play again?");
-    $('#big_event_message_holder').toggleClass('hidden');
+    $('#big_event_message_holder').removeClass('hidden');
 
 }
 
@@ -586,13 +567,13 @@ function youLose() {
     $('#big_event_message_holder h1').text("You lose!");
     $('#big_event_message_holder h3').text("Dealer cards value is higher than yours");
     $('#big_event_message_holder h2').text("Play again?");
-    $('#big_event_message_holder').toggleClass('hidden');
+    $('#big_event_message_holder').removeClass('hidden');
 }
 
 
 //Interaction
-    //Click or anykey except arrows starts game gameStart().
-    $(document).on('click', function(e) {
+    //Click on the sign or anykey except arrows starts game gameStart().
+    $('#big_event_message_holder').on('click', function(e) {
       if (!gameStarted) {
           gameStart();
       };
@@ -616,9 +597,7 @@ function youLose() {
         if (playerTurn == true && gameStarted && e.which == 39) {
             playerTurn = false;
             hit();
-            setTimeout(function () {
               playerTurn = true;
-            }, autofireTimeout)
         };
     });
 

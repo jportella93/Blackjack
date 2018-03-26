@@ -81,9 +81,12 @@ ul {
 }
 
 .flipped {
-    opacity: 0.5;
-    background-image: url(images/card_back.svg);
-    background-size:cover;
+  background-image: url(images/card_back.svg);
+  background-size: cover;
+  z-index: 10;
+  position: absolute;
+  top: 2em;
+  left: 9em;
 }
 
 .button_list button {
@@ -213,9 +216,13 @@ ul {
   }
 
   .flipped {
-      background-image: url(images/card_back.svg);
-      background-size:var(--card-width), var(--card-height);
-      font-size: 1.1em;
+    background-image: url(images/card_back.svg);
+    background-size: var(--card-width), var(--card-height);
+    font-size: 1.1em;
+    z-index: 10;
+    position: absolute;
+    left: 6em;
+    top: 1.5em;
   }
 
 
@@ -301,8 +308,8 @@ ul {
   border-width: 0.17em;
   }
 
-  .score p, #ace_becomes_one_player {
-      color: #F4F4F4;
+  .score p, #ace_becomes_one_player, #bank {
+      color: rgba(244, 244, 244, 1);
       font-family: "Helvetica Neue", Helvetica, sans-serif;
       text-align: center;
       font-size: 1.3em;
@@ -310,17 +317,16 @@ ul {
   }
 
   #dealer_score {
-      position: fixed;
-      top: 1%;
-      left: 30%;
-      z-index: 999;
-
+    position: fixed;
+    top: 1%;
+    left: 1%;
+    z-index: 999;
   }
 
   #player_score {
     position: fixed;
     bottom: 1%;
-    left: 30%;
+    left: 1%;
     z-index: 999;
   }
 
@@ -332,6 +338,23 @@ ul {
   width: 21em;
   padding: 0.35em;
   font-size: 1em;
+  }
+
+  #bank {
+    position: fixed;
+    bottom: 0%;
+    right: 1%;
+    width: auto;
+    padding: 0.3em 0.8em;
+  }
+
+  #bet {
+    position: fixed;
+    top: 1%;
+    right: 1%;
+    z-index: 999;
+    width: auto;
+    padding: 0em 0.8em;
   }
 
 }
