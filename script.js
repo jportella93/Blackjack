@@ -1,10 +1,12 @@
 //TODO: Make responsive for tablet
 //TODO: go landscape mode in tablet and portrait in phone.
-//TODO: Implement betting https://www.blackjackinfo.com/blackjack-rules/
+//TODO: Implement double down;
+//TODO: Implement betting pc;
+//TODO: Implement chips for betting diferent quantities;
 //TODO: Show tips when the game ends. E.G. Controls, strategies, dealer behaviour, time and games so far...
 //TODO: Music and sound
 
-$(document).ready(function () {
+
 
 //GLOBAL VARIABLES
 let playerCards = [];
@@ -14,16 +16,23 @@ let deck = [];
 let currentCardsPlayer = 0;
 let currentCardsDealer = 0;
 
-let playerMoney = 100;
+let bank = 100;
 let bet = 0;
+let betMemo = 0;
+const prizeMult = 2;
+const blackjackPrizeMult = 3;
 
 let gameStarted = false;
 let playerTurn = false;
 let dealerTurn = false;
+let phase ='';
 
 let cardTimeout = 800;
 let bigSignTimeout = 800;
 let cardDealingTimeout = 200;
+
+let keyboardTipCount = 0;
+let blackjackTipCount = 0;
 
 //UTILITIES
 //Debounce functions
@@ -37,6 +46,16 @@ function debounce(fn, delay) {
     }, delay);
   };
 }
+//Avoid right click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+//Turn right click on mobile to hold click
+// $(document).ready(function () {
+//   if($(window).width() < 600) {
+//     document.addEventListener('contextmenu', event => event.preventDefault());
+//    }
+// })
+
 
 //GAME FUNCTIONS
 
@@ -108,61 +127,6 @@ function createDeck() {
     createDeck('spades');
     createDeck('clubs');
 
-    /*
-      createAce('diamonds');
-
-      for (let i = 2; i <= 9; i++) {
-        let cardWord = 'card';
-        let cardNumber = i;
-        let card = cardWord + cardNumber;
-        card = new Card(i, 'diamonds', i);
-        deck.push(card)
-      }
-
-      for (let i = 10; i <= 13; i++) {
-        let cardWord = 'card';
-        let cardNumber = i;
-        let card = cardWord + cardNumber;
-        card = new Card(i, 'diamonds', 10);
-        deck.push(card)
-      }
-
-      createAce('spades');
-
-      for (let i = 2; i <= 9; i++) {
-        let cardWord = 'card';
-        let cardNumber = i;
-        let card = cardWord + cardNumber;
-        card = new Card(i, 'spades', i);
-        deck.push(card)
-      }
-
-      for (let i = 10; i <= 13; i++) {
-        let cardWord = 'card';
-        let cardNumber = i;
-        let card = cardWord + cardNumber;
-        card = new Card(i, 'spades', 10);
-        deck.push(card)
-      }
-
-      createAce('clubs');
-
-      for (let i = 2; i <= 9; i++) {
-        let cardWord = 'card';
-        let cardNumber = i;
-        let card = cardWord + cardNumber;
-        card = new Card(i, 'clubs', i);
-        deck.push(card)
-      }
-
-      for (let i = 10; i <= 13; i++) {
-        let cardWord = 'card';
-        let cardNumber = i;
-        let card = cardWord + cardNumber;
-        card = new Card(i, 'clubs', 10);
-        deck.push(card)
-      }
-    */
 }
 
 /// Deal a card
@@ -202,7 +166,7 @@ function turnAceToOne(cardsWhereTheAceIs) {
 
     let indexOfAce = cardsWhereTheAceIs.findIndex(findAce);
     cardsWhereTheAceIs[indexOfAce]._value = 1;
-    console.log("Total value over 21. The Ace value becomes 1.");
+    // console.log("Total value over 21. The Ace value becomes 1.");
 }
 
 //Return number and suit of the card that has been dealt.
@@ -295,25 +259,192 @@ function appendCardDealerAnimation() {
         $('.undealed_dealer').removeClass('undealed_dealer');
 }
 
-//function appendBet
+//Betting
+function increaseBet () {
+  if (bank > 0) {
+    bet += 5;
+    bank -= 5;
+  }
+}
 
-//// ACTUAL GAME
+function decreaseBet () {
+  if (bet > 5) {
+    bet -= 5;
+    bank += 5;
+  }
+}
+
+function regularPrize () {
+  bank += (bet * prizeMult);
+  betMemo = bet;
+  bet = 0;
+}
+
+function noPrize () {
+  bank += bet;
+  betMemo = bet;
+  bet = 0;
+}
+
+function blackjackPrize () {
+  bank += (bet * blackjackPrizeMult)
+  betMemo = bet;
+  bet = 0;
+}
+
+function losePrize () {
+  betMemo = bet;
+  bet = 0;
+}
+
+
+//HUD functions
+function cleanUpForNewGame () {
+  $('#player_score span').text('');
+  $('#dealer_score span').text('');
+  $('.card').remove();
+  $('#tip').remove();
+  playerCards = [];
+  dealerCards = [];
+  $('#big_event_message_holder').addClass('hidden');
+  $('#double_down').addClass('hidden');
+  $('#ace_becomes_one_player').addClass('hidden')
+}
+
+function refreshBetHUD () {
+  $('#set_bank span').text(bank);
+  $('#set_bet span').text(bet);
+  $('#bet span').text(bet);
+  $('#bank span').text(bank);
+}
+
+// Tips
+const keyboardTips = [
+  // '',
+  'You can change your bet with the UP and DOWN arrows and set it by pressing ENTER',
+  'You can use the RIGHT arrow to Hit and the LEFT arrow to Stand',
+  'You can Double Down pressing "d"',
+]
+
+const blackjackTips = [
+  // '',
+  'Dealer draws cards until he has a total of 17 or more',
+  'If your first two cards total 21 you win double prize',
+  "Doubling down allows you to double your bet and receive one (and only one) additional card to your hand",
+]
+
+//TODO: tips! almost implemented.
+// function showTips () {
+//
+//   function innerRandom () {
+//     let tip = 'cac';
+//     let keyboardTip = keyboardTips[keyboardTipCount];
+//     let blackjackTip = blackjackTips[blackjackTipCount];
+//
+//     if (Math.random() > 0.5) {
+//       if (keyboardTipCount < keyboardTips.length) {
+//         keyboardTipCount++;
+//         tip = keyboardTip;
+//       }
+//     } else {
+//       if (blackjackTipCount < blackjackTips.length)
+//       blackjackTipCount++;
+//       tip = blackjackTip;
+//     }
+//
+//         // $(document).ready(function () {
+//     if($(window).width() < 600) {
+//       alert('mobile')
+//     } else {
+//           // });
+//       return $('#big_event_message_holder').append(`<h4 id='tip'>Tip: ${tip}</h4>`)
+//
+//     }
+//   }
+//
+//   // if (Math.random() > 0.5)
+//     return innerRandom();
+//   //return innerRandom();
+//
+// }
+
+
+//// ACTUAL GAME _______________________________________________________________________________________________________
+
+$(document).ready(function () {
 
 //The big sign appears when the DOM is ready.
 $('#big_event_message_holder').removeClass('hidden');
 
 function gameStart() {
-  gameStarted = true;
+  if (bank <= 0) {
+    bankruptcy()
+  } else {
+    gameStarted = true;
 
-  $('.card').remove();
-  $('#big_event_message_holder').addClass('hidden');
+    cleanUpForNewGame ();
 
-    playerCards = [];
-    dealerCards = [];
     createDeck();
 
+    setBet();
+  }
+}
 
+function setBet() {
+  let betSetted = false;
+  $('#bet_wrapper').removeClass('hidden');
+  $('#bet_buttons').removeClass('hidden');
+  refreshBetHUD();
 
+  $('#button_more_bet').on('click', function () {
+    if (!betSetted) {
+      increaseBet();
+      refreshBetHUD();
+    }
+  });
+
+  $(window).keydown(function (e) {
+    if (!betSetted && e.which == 38) {
+      increaseBet();
+      refreshBetHUD();
+    }
+  });
+
+  $('#button_less_bet').on('click', function () {
+      if (!betSetted) {
+        decreaseBet();
+        refreshBetHUD();
+      }
+  });
+
+  $(window).keydown(function (e) {
+    if (!betSetted && e.which == 40) {
+      decreaseBet();
+      refreshBetHUD();
+    }
+  });
+
+  $('#button_set_bet').on('click', function () {
+    if (!betSetted) {
+      $('#bet_wrapper').addClass('hidden');
+      $('#bet_buttons').addClass('hidden');
+      dealFirstCards();
+    betSetted = true;
+  }
+  });
+
+  $(window).keyup(function (e) {
+    if (!betSetted && e.which == 13) {
+      $('#bet_wrapper').addClass('hidden');
+      $('#bet_buttons').addClass('hidden');
+      dealFirstCards();
+    betSetted = true;
+  }
+  });
+
+}
+
+function dealFirstCards () {
 
     //player is dealt two cards
     playerCards.push(randomCard(), randomCard());
@@ -324,51 +455,103 @@ function gameStart() {
     dealerCards.push(randomCard(), randomCard());
     currentCardsDealer = 2;
 
+    showHUD();
+
     appendNewCardToPlayerHand(1);
     setTimeout(function () {return appendNewCardToPlayerHand(2);}, cardDealingTimeout)
     setTimeout(function () {return appendNewCardToDealerHand(1);}, cardDealingTimeout * 2)
-
-    //HUD appears
-    $('#stand').removeClass('hidden');
-    $('#hit').removeClass('hidden');
-    $('#player_score span').text("" + totalValue(playerCards) + "");
-    $('#dealer_score span').text("" + dealerCards[0].value + "");
-    $('#player_score').removeClass('hidden');
-    $('#dealer_score').removeClass('hidden');
 
     //For the flipped card
     var secondCardDealerFlipped = $('<li class="card flipped undealed_dealer" id="dealer_card"><h3></h3></li>');
     $('#dealer_hand').append(secondCardDealerFlipped);
     appendCardDealerAnimation();
 
-    console.log("The player is dealt a " + describeDealtCard(playerCards[0]) + " and a " + describeDealtCard(playerCards[1]) + ". " + tellCurrentValue(playerCards));
+    // console.log("The player is dealt a " + describeDealtCard(playerCards[0]) + " and a " + describeDealtCard(playerCards[1]) + ". " + tellCurrentValue(playerCards));
 
-    console.log("The dealer is dealt a " + describeDealtCard(dealerCards[0]) + " and a hidden card.")
+    // console.log("The dealer is dealt a " + describeDealtCard(dealerCards[0]) + " and a hidden card.")
 
 
     if (totalValue(playerCards) > 21 && hasAnAce(playerCards)) {
         turnAceToOne(playerCards);
+        $('#ace_becomes_one_player').removeClass('hidden')
     }
-
 
     if (totalValue(playerCards) == 21)
-        blackjackCheck();
+    blackjackCheck();
     else {
-        console.log('Hit or stand?');
-        playerTurn = true;
+      // console.log('Hit or stand?');
+      playerTurn = true;
+      phase = 'doubleDown';
     }
+  }
 
+  //HUD appears
+  function showHUD () {
+    $('#stand').removeClass('hidden');
+    $('#hit').removeClass('hidden');
+    $('#player_score span').text("" + totalValue(playerCards) + "");
+    $('#dealer_score span').text("" + dealerCards[0].value + "");
+    $('#player_score').removeClass('hidden');
+    $('#dealer_score').removeClass('hidden');
+    $('#bank').removeClass('hidden');
+    $('#bet').removeClass('hidden');
+    $('#double_down').removeClass('hidden');
 }
 
-//Player can choose to click HIT or click STAND
+
+//Player can choose to Stand, Double Down or Hit.
+
+function doubleDown () {
+  if (bet * 2 <= bank) {
+    bank -= bet;
+    bet *= 2;
+    betMemo = bet;
+  } else {
+    bet += bank;
+    bank = 0;
+    betMemo = bet;
+  }
+  refreshBetHUD();
+
+  $('#double_down').addClass('hidden');
+  $('#ace_becomes_one_player').addClass('hidden');
+  playerCards.push(randomCard());
+  currentCardsPlayer++;
+  appendNewCardToPlayerHand(currentCardsPlayer);
+
+  if (totalValue(playerCards) > 21 && hasAnAce(playerCards)) {
+      turnAceToOne(playerCards);
+      $('#ace_becomes_one_player').removeClass('hidden')
+  }
+  // console.log(tellCurrentValue(playerCards));
+
+  $('#player_score span').text("" + totalValue(playerCards) + "");
+
+  //If the total value is over 21, player bust.
+
+  if (totalValue(playerCards) > 21)
+    {playerTurn = false;
+      gameStarted = false;
+      setTimeout(function () {
+          playerBust();
+      }, bigSignTimeout)}
+  else if (totalValue(playerCards) == 21) {
+      blackjackCheck();
+  } else {
+    setTimeout(function () {
+      stand()
+    }, bigSignTimeout);
+  }
+}
 
 //If clicks Hit receives another card.
 function hit() {
+    $('#double_down').addClass('hidden');
     $('#ace_becomes_one_player').addClass('hidden');
     playerCards.push(randomCard());
     currentCardsPlayer++;
-    console.log("The player is dealt a " + describeDealtCard(playerCards[playerCards.length - 1]) + ".");
-    console.log("Player " + currentHand(playerCards));
+    // console.log("The player is dealt a " + describeDealtCard(playerCards[playerCards.length - 1]) + ".");
+    // console.log("Player " + currentHand(playerCards));
     //If the hand is over 21 and it has an Ace, the Ace becomes value 1 instead of 11.
 
     appendNewCardToPlayerHand(currentCardsPlayer);
@@ -379,7 +562,7 @@ function hit() {
         turnAceToOne(playerCards);
         $('#ace_becomes_one_player').removeClass('hidden')
     }
-    console.log(tellCurrentValue(playerCards));
+    // console.log(tellCurrentValue(playerCards));
 
     $('#player_score span').text("" + totalValue(playerCards) + "");
 
@@ -392,7 +575,7 @@ function hit() {
             playerBust();
         }, bigSignTimeout)}
     else {
-        console.log('Hit or stand?');
+        // console.log('Hit or stand?');
         playerTurn = true;
     }
 
@@ -405,7 +588,7 @@ function stand() {
     $('#ace_becomes_one_player').addClass('hidden');
         // $('#stand').addClass('hidden');
         // $('#hit').addClass('hidden');
-    console.log('Dealer flips his hidden card. It is a ' + describeDealtCard(dealerCards[1]) + ".");
+    // console.log('Dealer flips his hidden card. It is a ' + describeDealtCard(dealerCards[1]) + ".");
 $('.flipped').remove();
      appendNewCardToDealerHand(currentCardsDealer);
         $('#dealer_score span').text("" + totalValue(dealerCards) + "");
@@ -418,12 +601,12 @@ total value is described. If it goes over 21 and has an Ace, the Ace will become
 value 1 instead of 11.
 */
 function dealersDecision() {
-    console.log('Dealer ' + currentHand(dealerCards));
+    // console.log('Dealer ' + currentHand(dealerCards));
 
     if (totalValue(dealerCards) > 21 && hasAnAce(dealerCards))
         turnAceToOne(dealerCards);
  $('#dealer_score span').text("" + totalValue(dealerCards) + "");
-    console.log(tellCurrentValue(dealerCards));
+    // console.log(tellCurrentValue(dealerCards));
 
     /*Now the dealers decision. Dealer will take more cards until total value is 17 or more.
     After that, decideWinner() is activated. If the dealer's total han value goes over 21,
@@ -448,7 +631,7 @@ function dealerTakeACard() {
         dealerCards.push(randomCard());
         currentCardsDealer++;
 
-        console.log("The dealer is dealt a " + describeDealtCard(dealerCards[dealerCards.length - 1]) + ".");
+        // console.log("The dealer is dealt a " + describeDealtCard(dealerCards[dealerCards.length - 1]) + ".");
 
         appendNewCardToDealerHand(currentCardsDealer);
     $('#dealer_score span').text("" + totalValue(dealerCards) + "");
@@ -462,9 +645,9 @@ function dealerTakeACard() {
 
 //Final value check.
 function decideWinner() {
-    console.log("The dealer stands. Final check: ")
-    console.log("Player " + currentHand(playerCards) + " " + tellCurrentValue(playerCards));
-    console.log("Dealer " + currentHand(dealerCards) + " " + tellCurrentValue(dealerCards));
+    // console.log("The dealer stands. Final check: ")
+    // console.log("Player " + currentHand(playerCards) + " " + tellCurrentValue(playerCards));
+    // console.log("Dealer " + currentHand(dealerCards) + " " + tellCurrentValue(dealerCards));
 
     setTimeout(function () {
         if (totalValue(playerCards) > totalValue(dealerCards))
@@ -480,9 +663,9 @@ function decideWinner() {
  * If both have blackjack it is a draw.
  */
 function blackjackCheck() {
-    console.log("Player blackjack!")
-    console.log('Dealer flips his hidden card. It is a ' + describeDealtCard(dealerCards[1]) + ".")
-    console.log('Dealer ' + currentHand(dealerCards));
+    // console.log("Player blackjack!")
+    // console.log('Dealer flips his hidden card. It is a ' + describeDealtCard(dealerCards[1]) + ".")
+    // console.log('Dealer ' + currentHand(dealerCards));
 
     if (totalValue(playerCards) > totalValue(dealerCards))
         setTimeout(function () {
@@ -500,73 +683,93 @@ function blackjackCheck() {
 //Diferent endings
 
 function blackjack() {
-    console.log("Dealer doesn't have blackjack! You win!")
-    console.log('Play again?')
+    // console.log("Dealer doesn't have blackjack! You win!")
+    // console.log('Play again?')
+    blackjackPrize();
     gameStarted = false;
     $('#big_event_message_holder h1').text("Blackjack!");
-    $('#big_event_message_holder h3').text('Awesome! Play again?');
-    $('#big_event_message_holder h2').text('');
+    $('#big_event_message_holder h3').text('Awesome! Double prize!');
+    $('#big_event_message_holder h2').text(`You won ${betMemo * blackjackPrizeMult - betMemo}$`);
     $('#big_event_message_holder').removeClass('hidden');
 }
 
 function blackjackPush() {
-    console.log("Player blackjack and dealer blackjack. It's a draw.")
-    console.log('Play again?')
+    noPrize();
+    // console.log("Player blackjack and dealer blackjack. It's a draw.")
+    // console.log('Play again?')
     gameStarted = false;
     $('#big_event_message_holder h1').text("Blackjack!");
     $('#big_event_message_holder h3').text('Unfortunately, the dealer also has Blackjack');
-    $('#big_event_message_holder h2').text("It's a draw");
+    $('#big_event_message_holder h2').text(`You recover your ${betMemo}$`);
     $('#big_event_message_holder').removeClass('hidden');
 }
 
 function playerBust() {
-    console.log('Bust! Your cards are over 21. You lose!')
-    console.log('Play again?')
+    losePrize();
+    // console.log('Bust! Your cards are over 21. You lose!')
+    // console.log('Play again?')
     gameStarted = false;
     $('#big_event_message_holder h1').text("Bust! You Lose!");
     $('#big_event_message_holder h3').text('Your cards are over 21');
-    $('#big_event_message_holder h2').text('Play again?');
+    $('#big_event_message_holder h2').text(`You lose ${betMemo}$`);
+    // showTips();
     $('#big_event_message_holder').removeClass('hidden');
 }
 
 function dealerBust() {
-    console.log('Dealer cards are over 21! You win!')
-    console.log('Play again?')
+    regularPrize();
+    // console.log('Dealer cards are over 21! You win!')
+    // console.log('Play again?')
     gameStarted = false;
     $('#big_event_message_holder h1').text("You win!");
     $('#big_event_message_holder h3').text('Dealer cards are over 21');
-    $('#big_event_message_holder h2').text("Play again?");
+    $('#big_event_message_holder h2').text(`You won ${betMemo * prizeMult - betMemo}$`);
+    // showTips();
     $('#big_event_message_holder').removeClass('hidden');
 }
 
 function push() {
-    console.log("Push! Player and dealer have the same score. It's a draw.")
-    console.log('Play again?')
+    noPrize();
+    // console.log("Push! Player and dealer have the same score. It's a draw.")
+    // console.log('Play again?')
     gameStarted = false;
     $('#big_event_message_holder h1').text("Push!");
     $('#big_event_message_holder h3').text('Player and dealer have the same score');
-    $('#big_event_message_holder h2').text("It's a draw");
+    $('#big_event_message_holder h2').text(`Your recover your ${betMemo}$`);
     $('#big_event_message_holder').removeClass('hidden');
 }
 
 function youWin() {
-    console.log('You win!')
-    console.log('Play again?')
+    regularPrize();
+    // console.log('You win!')
+    // console.log('Play again?')
     gameStarted = false;
     $('#big_event_message_holder h1').text("You win!");
     $('#big_event_message_holder h3').text("Your cards value is higher than dealers'");
-    $('#big_event_message_holder h2').text("Play again?");
+    $('#big_event_message_holder h2').text(`You won ${betMemo * prizeMult - betMemo}$`);
+    // showTips();
     $('#big_event_message_holder').removeClass('hidden');
 
 }
 
 function youLose() {
-    console.log('You lose!')
-    console.log('Play again?')
+    losePrize();
+    // console.log('You lose!')
+    // console.log('Play again?')
     gameStarted = false;
     $('#big_event_message_holder h1').text("You lose!");
     $('#big_event_message_holder h3').text("Dealer cards value is higher than yours");
-    $('#big_event_message_holder h2').text("Play again?");
+    $('#big_event_message_holder h2').text(`You lose ${betMemo}$`);
+    // showTips();
+    $('#big_event_message_holder').removeClass('hidden');
+}
+
+function bankruptcy() {
+    // console.log('Bankruptcy! Get out of here! Bring more money next time!')
+    gameStarted = true;
+    $('#big_event_message_holder h1').text("Bankruptcy");
+    $('#big_event_message_holder h3').text("Bring more money next time");
+    $('#big_event_message_holder h2').text(`Get out of here!`);
     $('#big_event_message_holder').removeClass('hidden');
 }
 
@@ -580,7 +783,7 @@ function youLose() {
     });
 
     $(document).keyup(function(e) {
-      if (!gameStarted && e.which != 39 && e.which != 37 && e.which != 38 && e.which != 40) {
+      if (!gameStarted && e.which != 13) {
           gameStart();
       };
     });
@@ -598,6 +801,25 @@ function youLose() {
             playerTurn = false;
             hit();
               playerTurn = true;
+        };
+    });
+
+
+
+    //Double down click or 'd'
+    $('#double_down').on('click', function () {
+        if (playerTurn == true && gameStarted && phase == 'doubleDown') {
+            playerTurn = false;
+            doubleDown()
+            phase = '';
+        };
+    });
+
+    $(document).keyup(function (e) {
+        if (playerTurn == true && gameStarted && phase == 'doubleDown' && e.which == 68) {
+            playerTurn = false;
+            doubleDown();
+              phase = '';
         };
     });
 
