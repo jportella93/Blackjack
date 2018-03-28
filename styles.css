@@ -1,0 +1,427 @@
+* {
+    box-sizing: border-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+body {
+    background: linear-gradient(to bottom right, #198B43, #052413);
+    background-repeat: no-repeat;
+    height: 100%;
+    margin: 0;
+    background-attachment: fixed;
+    /font-family: "garamond", Times, serif;
+}
+
+
+h1 {
+    font-size: 4em;
+}
+
+h2 {
+    font-size: 3em;
+
+}
+
+h3 {
+    font-size: 2em;
+
+}
+
+p {
+    font-size: 1em;
+}
+
+ul {
+    list-style: none;
+}
+
+.card {
+    background: linear-gradient(to bottom right, #F4F4F4, #efefef);
+    width: 14em;
+    height: 20.40em;
+    padding-left: 1em;
+    padding-top: 01em;
+    margin: 0.5em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 0.4em;
+    display: inline-block;
+    position: relative;
+    font-weight: bold;
+}
+
+.card img {
+    width: 2em;
+}
+
+.card h3 {
+    display: inline-block;
+    font-size: 2.75em;
+    padding: 0em;
+    margin: 0em;
+}
+
+.undealed_player {
+    opacity: 0;
+    bottom: 40em;
+}
+
+.undealed_dealer {
+    opacity: 0;
+    bottom: 10em;
+}
+
+.hidden {
+    display: none;
+}
+
+.flipped {
+  background-image: url(images/card_back.svg);
+  background-size: cover;
+  z-index: 10;
+  position: absolute;
+  top: 2em;
+  left: 9em;
+}
+
+.button_list button {
+    background: linear-gradient(to bottom right, #d84242, #A71F1E);
+    border-radius: 50em;
+    width: 15em;
+    height: 15em;
+    border-width: 0.5em;
+    border-color: #F4F4F4;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    outline: none;
+}
+
+.button_list button:disabled {
+    color: black;
+}
+
+.button_list button h3 {
+  color: #F4F4F4;
+  font-size: 3.4em;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+#player_hand {
+    position: fixed;
+    bottom: 3%;
+    left: 25%;
+}
+
+#player_hand li,
+#dealer_hand li {
+    margin: 0 -4em;
+}
+
+#dealer_hand {
+    position: fixed;
+    left: 40%;
+    top: 3%;
+}
+
+#big_event_message_holder, #bet_wrapper {
+    background-color: rgba(5, 36, 19, 0.9);
+    color: #F4F4F4;
+    text-align: center;
+    font-size: 130%;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 999;
+    font-family: Garamond, Times, "Times New Roman", serif;
+}
+
+#big_event_message_holder h3 {
+    font-weight: 100;
+}
+
+#hit, #button_more_bet {
+    position: fixed;
+    right: 3em;
+    bottom: 3em;
+}
+
+#button_set_bet {
+  position: fixed;
+  bottom: 3em;
+  left: 43.5%;
+}
+
+#double_down {
+  font-size: 0.8em;
+    position: absolute;
+    bottom: 17em;
+    right: 1.8em;
+    padding: 0px;
+}
+
+#stand, #button_less_bet {
+    position: fixed;
+    left: 3em;
+    bottom: 3em;
+}
+
+.score,
+#ace_becomes_one_player {
+    background-color: rgba(5, 36, 19, 0.7);
+    border-radius: 1em;
+    width: 12em;
+    border-style: solid;
+    border-color: #F4F4F4;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.score p, #ace_becomes_one_player {
+    color: #F4F4F4;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    text-align: center;
+    font-size: 1.3em;
+    margin: 0.3em 0;
+}
+
+#dealer_score {
+    position: fixed;
+    top: 1%;
+    left: 23%;
+    z-index: 999;
+
+}
+
+#player_score {
+    position: fixed;
+    bottom: 1%;
+    left: 50%;
+    z-index: 999;
+
+}
+
+#ace_becomes_one_player {
+    position: fixed;
+    bottom: 0.3%;
+    right: 51%;
+    z-index: 999;
+    width: 21em;
+    padding: 0.35em
+}
+
+#bank {
+  position: fixed;
+  bottom: 87%;
+  RIGHT: 1%;
+  z-index: 999;
+}
+
+#bet {
+  position: fixed;
+  top: 1%;
+  RIGHT: 1%;
+  z-index: 999;
+}
+
+/* _________________________________________________________________________________________________________________________*/
+@media (max-width: 600px) {
+
+:root {
+  --card-width: 7em;
+  --card-height: 10.20em;
+}
+
+  .card {
+      width: var(--card-width);
+      height: var(--card-height);
+      padding-left: 1em;
+      padding-top: 01em;
+      margin: 0.5em;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .flipped {
+    background-image: url(images/card_back.svg);
+    background-size: var(--card-width), var(--card-height);
+    font-size: 1.1em;
+    z-index: 10;
+    position: absolute;
+    left: 6em;
+    top: 1.5em;
+  }
+
+
+  .card img {
+    width: 1.6em;
+    margin: -0.3em 0.1em 0em -0.6em;
+  }
+
+  .card h3 {
+      display: inline-block;
+      font-size: 2.3em;
+      padding: 0em;
+      margin: -1em 0em;
+  }
+
+
+  .button_list button {
+      width: 7em;
+      height: 7em;
+      border-width: 0.4em;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      outline: none;
+  }
+
+  .button_list button h3 {
+      font-size: 1.5em;
+  }
+
+  #bet_buttons h3 {
+    font-size: 4.5em;
+    margin: -0.69em;
+  }
+
+  #button_set_bet {
+    position: absolute;
+    bottom: 8%;
+    left: 31%;
+    margin: 0;
+    padding: 0em 0.4em;
+    width: 13em;
+  }
+
+  #button_set_bet h3 {
+font-size: 2.8em;
+  }
+
+  #hit, #button_more_bet {
+      position: fixed;
+      right: 3em;
+      bottom: 5em;
+  }
+
+  #double_down {
+    bottom: 8%;
+    position: absolute;
+    right: 38.5%;
+    font-size: 0.8em;
+    PADDING: 0px;
+  }
+
+  #stand, #button_less_bet {
+      position: fixed;
+      left: 3em;
+      bottom: 5em;
+  }
+
+  #player_hand {
+      position: fixed;
+      bottom: 36%;
+      left: 3%;
+  }
+
+  #player_hand li,
+  #dealer_hand li {
+      margin: -1em -1.2em -5.5em 0em;
+  }
+
+  #dealer_hand {
+      position: fixed;
+      left: 3%;
+      top: 9%;
+  }
+
+  #big_event_message_holder {
+      /* background-color: rgba(5, 36, 19, 0.9);
+      color: #F4F4F4;
+      text-align: center; */
+      font-size: 70%;
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      z-index: 999;
+      font-family: Garamond, Times, "Times New Roman", serif;
+  }
+
+  #big_event_message_holder h3 {
+      font-weight: 100;
+  }
+
+  div#bet_wrapper {
+    background-color: rgba(5, 36, 19, 0.9);
+    color: #F4F4F4;
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    top: 46%;
+    font-family: Garamond, Times, "Times New Roman", serif;
+    z-index: 999;
+}
+
+  .score,
+  #ace_becomes_one_player {
+    background-color: rgba(5, 36, 19, 0.7);
+  border-radius: 1em;
+  width: 10em;
+  border-style: solid;
+  border-color: #F4F4F4;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-width: 0.17em;
+  }
+
+  .score p, #ace_becomes_one_player, #bank {
+      color: rgba(244, 244, 244, 1);
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+      text-align: center;
+      font-size: 1.3em;
+      margin: 0.3em 0;
+  }
+
+  #dealer_score {
+    position: fixed;
+    top: 1%;
+    left: 1%;
+    z-index: 999;
+  }
+
+  #player_score {
+    position: fixed;
+    bottom: 1%;
+    left: 1%;
+    z-index: 999;
+  }
+
+  #ace_becomes_one_player {
+    position: fixed;
+  bottom: 51.3%;
+  right: 7%;
+  z-index: 999;
+  width: 21em;
+  padding: 0.35em;
+  font-size: 1em;
+  }
+
+  #bank {
+    position: fixed;
+    bottom: 0%;
+    right: 1%;
+    width: auto;
+    padding: 0em 0.5em;
+    font-size: 1em;
+  }
+
+  #bet {
+    position: fixed;
+    top: 1%;
+    right: 1%;
+    z-index: 999;
+    width: auto;
+    padding: 0em 0.8em;
+  }
+
+}

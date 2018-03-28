@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Jon Portella Blackjack</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="jquery-3.3.1.min.js"></script>
+  <script src="script.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+</head>
+
+
+<body>
+  <div class="score hidden" id="dealer_score">
+    <p>Dealer score <span></span></p>
+  </div>
+  <div id="big_event_message_holder" class="hidden">
+    <h1><img src="images/heart-poker-piece.svg" style="width: 0.7em;"><img src="images/spades-poker-piece-white.svg" style="width: 0.7em;"> Blackjack <img src="images/chip-with-club-white.svg" style="width: 0.7em;"><img src="images/diamond-poker-piece.svg" style="width: 0.7em;"></h1>
+    <h3></h3>
+    <h2></h2>
+  </div>
+
+  <ul class="hand" id="dealer_hand">
+  </ul>
+
+  <div id="bet_wrapper" class="hidden">
+    <div id="set_bank">
+      <h3>Bank: <span></span>$</h3>
+    </div>
+    <div id="set_bet">
+      <h3>Bet <span></span>$</h3>
+    </div>
+  </div>
+
+
+  <div class="score hidden" id="bet"><p>Bet <span>25</span>$</p></div>
+
+  <div class="score hidden" id="bank"><p>Bank <span>100</span>$</p></div>
+
+<div id="ace_becomes_one_player" class="score hidden">Total score over 21. Ace value becomes 1</div>
+
+<ul class="hand" id="player_hand">
+</ul>
+
+<ul class="button_list">
+  <button id="stand" class="hidden">
+    <h3>Stand</h3>
+  </button>
+  <button id="hit" class="hidden">
+    <h3>Hit</h3>
+  </button>
+  <button id='double_down' class="hidden"><h3>Double Down</h3></button>
+</ul>
+
+
+<ul class="button_list hidden" id="bet_buttons">
+  <button id='button_less_bet'><h3>-</h3></button>
+  <button id='button_set_bet'><h3>Set Bet</h3></button>
+  <button id='button_more_bet'><h3>+</h3></button>
+</ul>
+
+
+<div class="score hidden" id="player_score">
+  <p>Player score <span></span> </p>
+</div>
+
+
+</body>
+
+
+</html>
