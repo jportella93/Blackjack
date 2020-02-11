@@ -1,7 +1,9 @@
 # Blackjack
 👉 [Play](https://jportella93.github.io/Blackjack/index.html)
 
+<a href="https://jportella93.github.io/Blackjack/index.html" target="_blank">
 <img src="https://i.imgur.com/c8aTyd4.png" alt="Blackjack" />
+</a>
 
 Play against dealer in this serverless, single page application.
 
