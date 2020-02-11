@@ -1,5 +1,5 @@
 # Blackjack
-👉 [Play](http://testblackjack.s3-website.us-east-2.amazonaws.com/)
+👉 [Play](https://jportella93.github.io/Blackjack/index.html)
 
 Play against dealer in this serverless, single page application.
 
